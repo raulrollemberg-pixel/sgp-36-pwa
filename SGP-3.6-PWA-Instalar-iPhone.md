@@ -1,6 +1,8 @@
 # Instalar SGP 3.6 no iPhone (Safari → Tela de Início)
 
-1. Abra a **URL HTTPS permanente** do app no **Safari** do iPhone (não use Chrome/Firefox para instalar).
+**URL permanente:** https://raulrollemberg-pixel.github.io/sgp-36-pwa/
+
+1. Abra a URL acima no **Safari** do iPhone (não use Chrome/Firefox para instalar).
 2. Toque em **Compartilhar** (ícone □↑).
 3. Role e toque em **Adicionar à Tela de Início**.
 4. Confirme o nome **SGP 3.6** → **Adicionar**.
