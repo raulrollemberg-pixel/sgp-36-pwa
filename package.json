@@ -1,0 +1,62 @@
+{
+  "name": "sgp-36",
+  "version": "3.6.0",
+  "description": "SGP 3.6 PGE-SE — desktop Windows (Electron + PWA local)",
+  "main": "electron/main.js",
+  "author": "PGE-SE",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win portable --x64",
+    "dist:win:zip": "electron-builder --win zip --x64",
+    "dist:win:dir": "electron-builder --win dir --x64"
+  },
+  "devDependencies": {
+    "electron": "^34.5.8",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "br.gov.se.pge.sgp36",
+    "productName": "SGP 3.6",
+    "copyright": "PGE-SE",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "index.html",
+      "app.js",
+      "styles.css",
+      "sw.js",
+      "manifest.webmanifest",
+      "icons/**/*",
+      "electron/**/*"
+    ],
+    "extraMetadata": {
+      "main": "electron/main.js"
+    },
+    "win": {
+      "icon": "icons/icon-512.png",
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64"]
+        }
+      ],
+      "artifactName": "SGP-3.6-${version}-Windows-${arch}.${ext}",
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "SGP-3.6-${version}-Windows-x64-portable.exe"
+    },
+    "nsis": {
+      "oneClick": true,
+      "artifactName": "SGP-3.6-${version}-Windows-x64-setup.exe"
+    }
+  }
+}

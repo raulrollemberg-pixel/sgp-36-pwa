@@ -415,7 +415,21 @@
     }
   }
 
-  if (localStorage.getItem(STORAGE_INSTALL_DISMISS) === '1') $('#installBanner').hidden = true;
+  const isDesktop = !!(window.sgpDesktop && window.sgpDesktop.isElectron);
+  if (isDesktop) {
+    document.body.classList.add('sgp-desktop');
+    const banner = $('#installBanner');
+    if (banner) banner.hidden = true;
+    const sub = document.querySelector('.app-header .sub');
+    if (sub) sub.textContent = 'PGE-SE · Windows · Espelho · Portais';
+    const about = $('#aboutHint');
+    if (about) {
+      about.innerHTML = 'Versão desktop <strong>3.6.0</strong> (Electron + PWA local) · dados só neste computador (localStorage). Sem Touch ID/Keychain do Mac. Arquivar é só local.';
+    }
+  } else if (localStorage.getItem(STORAGE_INSTALL_DISMISS) === '1') {
+    $('#installBanner').hidden = true;
+  }
+
   fillSettings();
   renderPortals();
   renderList();
@@ -424,7 +438,7 @@
   const hash = (location.hash || '#hoje').slice(1);
   if (['hoje','lista','espelho','extrair','portais','ajustes'].includes(hash)) showPanel(hash);
 
-  if ('serviceWorker' in navigator) {
+  if (!isDesktop && 'serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
 })();
