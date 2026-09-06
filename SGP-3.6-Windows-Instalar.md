@@ -10,7 +10,11 @@ Pacote **portátil** — não precisa de instalador MSI/NSIS nem de privilégio 
 
 ## Como usar o ZIP de teste
 
-Arquivo: `SGP-3.6-Windows-Teste.zip`
+Arquivo: `SGP-3.6-Windows-Teste.zip` (também em `release/` e nos artefatos do agente).
+
+SHA-256 do executável portátil desta build:
+
+`38d8bb7dc52150010bcc1a7952ce32ff3a440423ba990cc13a76426bb0f710df`
 
 1. Copie o ZIP para o PC (Downloads, Área de trabalho ou pasta da PGE).
 2. Clique com o botão direito → **Extrair tudo…** (ou 7-Zip / WinRAR).

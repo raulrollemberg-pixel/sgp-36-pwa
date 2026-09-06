@@ -36,7 +36,13 @@ function createWindow() {
     }
   });
 
+  win.on('page-title-updated', (event) => {
+    event.preventDefault();
+    win.setTitle('SGP 3.6 PGE-SE');
+  });
+
   win.once('ready-to-show', () => {
+    win.setTitle('SGP 3.6 PGE-SE');
     win.show();
   });
 

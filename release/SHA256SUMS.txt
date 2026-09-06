@@ -1,0 +1,3 @@
+38d8bb7dc52150010bcc1a7952ce32ff3a440423ba990cc13a76426bb0f710df  SGP-3.6-3.6.0-Windows-x64-portable.exe
+9d8246a587fcbfa07f8a566e07b46491c7f9c363acac20c44c0d7d0496358076  SGP-3.6-Windows-Instalar.md
+ad46e08c000bc541179328c71e1b436d1b3cac802fd9ec572496ec3beb932ca6  SGP-3.6-Windows-Limitacoes.md
