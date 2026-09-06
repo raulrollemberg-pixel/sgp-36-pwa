@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0B3A6E" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SGP 3.6" />
+  <meta name="description" content="SGP 3.6 PGE-SE — Hoje, Comunicações, Espelho, Portais no iPhone" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>SGP 3.6</title>
+</head>
+<body>
+  <header class="app-header">
+    <h1>SGP 3.6</h1>
+    <p class="sub">PGE-SE · iPhone PWA · Espelho · Portais</p>
+  </header>
+  <div class="gold-bar" aria-hidden="true"></div>
+
+  <div id="installBanner" class="install-banner" role="region" aria-label="Instalar">
+    <strong>Instalar na Tela de Início</strong>
+    <ol>
+      <li>Safari → <strong>Compartilhar</strong> (□↑)</li>
+      <li><strong>Adicionar à Tela de Início</strong></li>
+      <li>Confirme <strong>Adicionar</strong></li>
+    </ol>
+    <button type="button" id="dismissInstall">Entendi</button>
+  </div>
+
+  <section id="panel-hoje" class="panel active" data-panel="hoje">
+    <div class="card">
+      <h2>Hoje</h2>
+      <p class="hint">Prazos a partir do Espelho (cache local). Extraia/importe na aba Extrair.</p>
+      <div class="stats">
+        <div><span id="statToday" class="stat-n">0</span><span class="stat-l">prazo hoje</span></div>
+        <div><span id="statWeek" class="stat-n">0</span><span class="stat-l">em 7 dias</span></div>
+        <div><span id="statPending" class="stat-n">0</span><span class="stat-l">pendentes</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Prazos próximos</h2>
+      <div id="hojeList"></div>
+      <p class="empty" id="hojeEmpty">Nenhum prazo plausível no cache.</p>
+    </div>
+  </section>
+
+  <section id="panel-lista" class="panel" data-panel="lista">
+    <div class="toolbar">
+      <h2>Comunicações <span id="listCount" class="badge">0</span></h2>
+      <button type="button" class="btn btn-outline btn-sm" id="clearListBtn">Limpar</button>
+    </div>
+    <div id="processList"></div>
+    <p class="empty" id="listEmpty">Nada ainda. Use <strong>Extrair</strong> ou importe CSV/XLSX do SGP.</p>
+  </section>
+
+  <section id="panel-espelho" class="panel" data-panel="espelho">
+    <div class="toolbar wrap">
+      <h2>Espelho</h2>
+      <div class="sort-row">
+        <span class="muted">Ordenar:</span>
+        <button type="button" class="btn btn-outline btn-sm" data-sort="inicio">Início do Prazo</button>
+        <button type="button" class="btn btn-outline btn-sm" data-sort="final">Final do Prazo</button>
+        <button type="button" class="btn btn-outline btn-sm" id="clearSortBtn">Limpar</button>
+      </div>
+    </div>
+    <p class="hint" id="sortHint">Toque no botão 1× crescente, 2× decrescente (linha inteira).</p>
+    <div class="table-wrap">
+      <table class="espelho" id="espelhoTable">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Status</th>
+            <th>CNJ</th>
+            <th>Início</th>
+            <th>Final</th>
+            <th>Tipo</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="espelhoBody"></tbody>
+      </table>
+    </div>
+    <div class="btn-row sticky-actions">
+      <button type="button" class="btn btn-outline" id="selectAllBtn">Selecionar tudo</button>
+      <button type="button" class="btn btn-gold" id="archiveLocalBtn">Arquivar (local)</button>
+    </div>
+    <p class="hint">Arquivar na PWA só marca localmente (fila offline). No Mac, o app sincroniza com o SGP.</p>
+  </section>
+
+  <section id="panel-extrair" class="panel" data-panel="extrair">
+    <div class="card">
+      <h2>Abrir SGP</h2>
+      <a class="btn btn-gold btn-block" id="openSgpBtn" href="https://sgp.pge.se.gov.br/comunicacoes" rel="noopener" target="_blank">Abrir SGP Comunicações</a>
+      <p class="hint">No iPhone o SGP abre no Safari. Copie a tabela / use Exportar CSV e volte pelo ícone do app.</p>
+    </div>
+    <div class="card">
+      <h2>Colar texto / HTML</h2>
+      <textarea id="pasteArea" placeholder="Cole texto ou HTML do SGP…"></textarea>
+      <button type="button" class="btn btn-block" id="extractBtn">Extrair CNJ / colunas</button>
+      <div id="extractResult" class="extract-preview" hidden></div>
+    </div>
+    <div class="card">
+      <h2>Importar CSV do SGP</h2>
+      <input type="file" id="csvFile" accept=".csv,text/csv" />
+      <p class="hint">Use o Exportar do SGP. XLSX: exporte CSV ou use o Mac app.</p>
+    </div>
+    <div class="card">
+      <h2>Adicionar manualmente</h2>
+      <input type="text" id="manualProcess" placeholder="0000000-00.0000.0.00.0000" inputmode="numeric" />
+      <button type="button" class="btn btn-outline btn-block" id="addManualBtn">Adicionar</button>
+    </div>
+    <div class="card">
+      <h2>Planilha</h2>
+      <button type="button" class="btn btn-outline btn-block" id="exportCsvBtn">Exportar CSV local</button>
+    </div>
+  </section>
+
+  <section id="panel-portais" class="panel" data-panel="portais">
+    <div class="card">
+      <h2>Portais (Safari)</h2>
+      <p class="hint">TJSE / JF / TRF5 abrem no Safari (como no Mac 3.6).</p>
+      <div class="portal-grid" id="portalGrid"></div>
+    </div>
+  </section>
+
+  <section id="panel-ajustes" class="panel" data-panel="ajustes">
+    <div class="card">
+      <h2>URLs</h2>
+      <label class="field" for="sgpURL">SGP</label>
+      <input type="url" id="sgpURL" />
+      <label class="field" for="portalTJSE">Portal Advogado</label>
+      <input type="url" id="portalTJSE" />
+      <label class="field" for="eproc1G">eproc 1G</label>
+      <input type="url" id="eproc1G" />
+      <label class="field" for="eproc2G">eproc 2G</label>
+      <input type="url" id="eproc2G" />
+      <label class="field" for="pjeJF">PJe JF</label>
+      <input type="url" id="pjeJF" />
+      <label class="field" for="pjeTRF5">PJe TRF5</label>
+      <input type="url" id="pjeTRF5" />
+      <button type="button" class="btn btn-block" id="saveSettingsBtn">Salvar</button>
+      <button type="button" class="btn btn-outline btn-block" id="resetSettingsBtn">Restaurar padrões</button>
+    </div>
+    <div class="card">
+      <h2>Sobre</h2>
+      <p class="hint">Versão PWA <strong>3.6.0</strong> · dados só neste aparelho (localStorage). Sem App Store. Face ID do iPhone não substitui o Touch ID do Mac app.</p>
+    </div>
+  </section>
+
+  <nav class="tabs" aria-label="Seções">
+    <button type="button" class="tab-btn active" data-tab="hoje"><span class="ico">☀</span>Hoje</button>
+    <button type="button" class="tab-btn" data-tab="lista"><span class="ico">☰</span>Lista</button>
+    <button type="button" class="tab-btn" data-tab="espelho"><span class="ico">▦</span>Espelho</button>
+    <button type="button" class="tab-btn" data-tab="extrair"><span class="ico">✂</span>Extrair</button>
+    <button type="button" class="tab-btn" data-tab="portais"><span class="ico">🌐</span>Portais</button>
+    <button type="button" class="tab-btn" data-tab="ajustes"><span class="ico">⚙</span>Ajustes</button>
+  </nav>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
